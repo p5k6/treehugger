@@ -5,11 +5,11 @@ require 'treehugger/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "treehugger"
-  spec.version       = Treehugger::VERSION
+  spec.version       = TreeHugger::VERSION
   spec.authors       = ["Josh Stanfield"]
   spec.email         = ["josh.stanfield@livingsocial.com"]
   spec.summary       = %q{Treehugger: a gem to parse a Hive query's abstract syntax tree}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.description   = %q{}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -19,10 +19,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.5"
-  spec.add_development_dependency "rake"
   spec.add_development_dependency('rdoc')
   spec.add_development_dependency('aruba')
   spec.add_development_dependency('rake', '~> 0.9.2')
+  spec.add_development_dependency('factory_girl', "~> 4.0")
   spec.add_dependency('methadone', '~> 1.4.0')
   spec.add_development_dependency('rspec')
 end

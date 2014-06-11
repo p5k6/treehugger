@@ -35,7 +35,7 @@ class App
   # # Make an argument optional
   # arg :optional_arg, :optional
 
-  version Treehugger::VERSION
+  version TreeHugger::VERSION
 
   use_log_level_option
 

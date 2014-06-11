@@ -1,3 +1,3 @@
-module Treehugger
+module TreeHugger
   VERSION = "0.0.1"
 end

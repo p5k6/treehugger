@@ -3,7 +3,7 @@ require "treehugger/hive/planter"
 require "treehugger/hive/distiller"
 require "treehugger/tree"
 
-module Treehugger
+module TreeHugger
 #   # Your code goes here...
 #   ALL_COLUMNS = "ALL_COLUMNS"
 # 
@@ -15,7 +15,7 @@ module Treehugger
 #       ### get the location of nesting depths
 #       query_ast.scan(/[()]/) { |y| parser_positions << Regexp.last_match.offset(0)[0] }
 # 
-#       master_tree = Treehugger::Tree.new
+#       master_tree = TreeHugger::Tree.new
 #       master_tree.children = []
 # 
 #       last_branch = nil
@@ -53,7 +53,7 @@ module Treehugger
 #       return master_tree
 #     end
 # 
-#     ### master_tree should be of the Treehugger::Tree class
+#     ### master_tree should be of the TreeHugger::Tree class
 #     def self.get_columns_and_tables(master_tree)
 #       table_refs = []
 #       column_refs = []
