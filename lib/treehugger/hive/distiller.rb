@@ -28,6 +28,7 @@ module TreeHugger
       def get_main_references
         table_refs = []
         column_refs = []
+        subquery_refs = []
         query_uuid_stack = [] 
         temp_splat_storage = []
 
@@ -79,13 +80,18 @@ module TreeHugger
             temp_splat_storage << { :query_uuid => query_uuid_stack[-1][:uuid], :col_name => TreeHugger::ALL_COLUMNS }
           end
 
+          ### currently using this only to figure out if missing alias refs (i.e. in subquery with only 1 table referenced) should be applied to all 
+          ### columns at a particular depth
+          if node.token == "TOK_SUBQUERY"
+            _alias = node.children[1].token
+            subquery_refs << { :alias => _alias, :query_uuid => query_uuid_stack[-1][:uuid] }
+          end
         }
 
         #ridiculously convoluted way of getting subqueries with all columns where there's no alias
-        column_refs = column_refs.concat(
-          table_refs.inject(Hash.new(0)) { |h,e| h[e[:query_uuid]] +=1; h } \
-          .select { |k,v| v==1 }.keys.collect \
-          { |uuid|
+        singleton_uuids = table_refs.inject(Hash.new(0)) { |h,e| h[e[:query_uuid]] +=1; h }.select { |k,v| v==1 }.keys.select { |x| ! (subquery_refs.map { |y| y[:query_uuid] }.include? x) }
+        #
+        column_refs = column_refs.concat(singleton_uuids.collect { |uuid|
             tbl = table_refs.select { |i| i[:query_uuid] == uuid }.first
             allcol_refs = temp_splat_storage.select { |i| i[:query_uuid] == uuid }
 
@@ -95,9 +101,13 @@ module TreeHugger
           }.flatten
         )
 
+        ### now fix up missing references for single table subquery without alias in column_refs
+        column_refs.select { |col| col[:alias].nil? }.each { |col| 
+          tbl_ref = table_refs.select { |tbl| singleton_uuids.include? tbl[:query_uuid] }.find { |tbl| tbl[:query_uuid] == col[:query_uuid] }
+          col[:alias] = tbl_ref[:alias] if tbl_ref
+        }
 
         { :column_references => column_refs, :table_references => table_refs}
-
       end
     end
   end
