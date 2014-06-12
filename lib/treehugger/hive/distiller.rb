@@ -81,93 +81,23 @@ module TreeHugger
 
         }
 
-       #ridiculously convoluted way of getting subqueries with all columns where there's no alias
-       column_refs = column_refs.concat(
-         table_refs.inject(Hash.new(0)) { |h,e| h[e[:query_uuid]] +=1; h } \
-         .select { |k,v| v==1 }.keys.collect \
-         { |uuid|
-           tbl = table_refs.select { |i| i[:query_uuid] == uuid }.first
-           allcol_refs = temp_splat_storage.select { |i| i[:query_uuid] == uuid }
+        #ridiculously convoluted way of getting subqueries with all columns where there's no alias
+        column_refs = column_refs.concat(
+          table_refs.inject(Hash.new(0)) { |h,e| h[e[:query_uuid]] +=1; h } \
+          .select { |k,v| v==1 }.keys.collect \
+          { |uuid|
+            tbl = table_refs.select { |i| i[:query_uuid] == uuid }.first
+            allcol_refs = temp_splat_storage.select { |i| i[:query_uuid] == uuid }
 
-           allcol_refs.map { |y| 
-             { :col_name => TreeHugger::ALL_COLUMNS, :alias => tbl[:alias], :query_uuid => uuid } if uuid == y[:query_uuid]
-           }.compact
-         }.flatten
-       )
+            allcol_refs.map { |y| 
+              { :col_name => TreeHugger::ALL_COLUMNS, :alias => tbl[:alias], :query_uuid => uuid } if uuid == y[:query_uuid]
+            }.compact
+          }.flatten
+        )
 
 
         { :column_references => column_refs, :table_references => table_refs}
 
-      end
-
-
-
-
-
-
-
-
-      #### pretty sure this could be moved into main_references, and avoid a second traversal of the tree. But works for now
-      def get_singleton_subquery_refs
-        query_leafs = []
-        leafs = []
-
-        ###find our leaf nodes
-        @master_tree.each { |n| 
-          leafs << n if n.children == []
-        }
-
-        # traverse in reverse, find the LCA for TOK_QUERY
-        leafs.each { |n|
-          last_node = n
-          until last_node.token == "TOK_QUERY"
-            last_node = last_node.parent
-          end
-          query_leafs << last_node
-        }
-
-        # Uniqueify them
-        query_leafs.uniq! ; nil
-        column_refs = []
-        table_refs = []
-
-        ## now we go through, find those that only have one table ref, and associate the columns to that one table ref
-        query_leafs.each { |n| 
-          temp_column_refs = []
-          temp_tables = []
-
-          n.each { |nn| 
-            if nn.token == "TOK_TABREF" 
-              db_name = "default"
-              refs = nn.children[0].token.gsub(/\s/, " ").split(" ")
-
-              if refs.length == 3
-                db_name = refs[1]
-              end
-
-              ### no alias, so we're copying table name as alias
-              temp_tables << { :table => refs[-1], :db => db_name, :alias => refs[-1]}
-            end
-
-            if nn.token =~ /^TOK_TABLE_OR_COL/
-              ## wer're only looking for column to table refs where there is no alias specified
-              temp_column_refs << nn.token.gsub(/\s/, " ").split(" ")[-1]
-            end
-
-            if nn.token = "TOK_SELEXPR TOK_ALLCOLREF"
-              temp_column_refs << TreeHugger::ALL_COLUMNS
-            end
-          }
-
-          if temp_tables.length == 1
-            table_refs << temp_tables.first
-            temp_column_refs.each { |col|
-              column_refs << { :col_name => col, :alias => temp_tables.first[:table]}
-            }
-          end
-        } 
-
-        { :column_references => column_refs, :table_references => table_refs }
       end
     end
   end
