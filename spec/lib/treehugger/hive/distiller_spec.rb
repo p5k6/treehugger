@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'treehugger'
-require 'pry'
 
 describe TreeHugger::Hive::Distiller do
   HIVE_TEST_CASES.each do |test_case|
@@ -27,7 +26,7 @@ describe TreeHugger::Hive::Distiller do
       let!(:subject)  { TreeHugger::Hive::Distiller.new(test_case[:ast_string]) }
 
       it "grabs columns correctly" do
-        binding.pry
+        puts "testing columns for query: #{test_case[:raw_query][0..50]}...." unless test_case[:raw_query].nil?
         diff = ( (subject.get_column_table_intersection.sort_by { |x| [ x[:table],x[:col_name]] }.uniq - test_case[:columns].sort_by { |x| [ x[:table],x[:col_name]] }.uniq) + \
                 (test_case[:columns].sort_by { |x| [ x[:table],x[:col_name]] }.uniq - subject.get_column_table_intersection.sort_by { |x| [ x[:table],x[:col_name]] }.uniq))
         diff.should be_empty
