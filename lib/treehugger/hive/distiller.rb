@@ -83,6 +83,7 @@ module TreeHugger
           ### currently using this only to figure out if missing alias refs (i.e. in subquery with only 1 table referenced) should be applied to all 
           ### columns at a particular depth
           if node.token == "TOK_SUBQUERY"
+            #### TODO - fix up for potential 3 length (ie josh.table_name)
             _alias = node.children[1].token
             subquery_refs << { :alias => _alias, :query_uuid => query_uuid_stack[-1][:uuid] }
           end

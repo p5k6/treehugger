@@ -2,24 +2,56 @@
 
 require 'optparse'
 require 'methadone'
+require 'json'
 require 'treehugger.rb'
 
 class App
   include Methadone::Main
   include Methadone::CLILogging
 
-  main do # Add args you want: |like,so|
-    # your program code here
-    # You can access CLI options via
-    # the options Hash
+  main do
+    unless ['hive'].include?(options['language'])
+      raise ArgumentError, "You have entered an invalid language to parse. Only Hive (cdh4) is supported at this time."
+    end   
+
+    unless ['cdh4'].include?(options['version'])
+      raise ArgumentError, "You have entered an invalid version of #{language} to parse. Only Hive (cdh4) is supported at this time."
+    end   
+
+    filenames = options['file'] || []
+
+    files = if filenames.empty?
+              [STDIN]
+            else
+              filenames.map { |_| File.open(_) }
+            end
+    # files is now an Array of open IO objects
+    begin
+
+      files.each { |file|
+        ast = file.read
+
+        distiller = TreeHugger::Hive::Distiller.new(ast)
+        puts distiller.get_column_table_intersection.to_json
+      }
+    ensure
+      files && files.map(&:close)
+    end
   end
 
   # supplemental methods here
 
   # Declare command-line interface here
+  #
+  options['language'] = 'hive'
+  options['version'] = 'cdh4'
+
 
   # description "one line description of your app"
   #
+  #
+  on("-l language","--language","language to parse")
+  on("-V version","--language-version","The version of language to parse")
   # Accept flags via:
   # on("--flag VAL","Some flag")
   # options[flag] will contain VAL
@@ -34,6 +66,9 @@ class App
   #
   # # Make an argument optional
   # arg :optional_arg, :optional
+  
+  spec = Gem::Specification.find_by_name('treehugger')
+  description spec.summary
 
   version TreeHugger::VERSION
 
