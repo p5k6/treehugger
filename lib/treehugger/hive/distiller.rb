@@ -20,7 +20,7 @@ module TreeHugger
         populate_columns_and_tables if @table_references.nil? || @column_references.nil?
         @table_references.map { |a|
           @column_references.map { |b|
-            {:col_name => b[:col_name], :table => a[:table], :db => a[:db] } if a[:alias] == b[:alias] && a[:query_uuid] == b[:query_uuid]
+            {:column_name => b[:col_name], :table => a[:table], :db => a[:db] } if a[:alias] == b[:alias] && a[:query_uuid] == b[:query_uuid]
           } 
         }.flatten.compact
       end
