@@ -39,6 +39,10 @@ Primary instance method intended to by used after creation of distiller object. 
 #### bin/treehugger
 Binary included with the gem. Accepts input from either stdin or a file, which should be a Hive AST. Behind the scenes, creates a new distiller object and runs get_column_table_intersection. Returns the array of hashes, but in this case as json.
 
+
+## A note on testing
+For this test, I decided the best way to approach was to create a list of inputs and expected outputs in a separate file. The spec/support/hive_test_data.yml contains an array of hashes, this time with input data (:ast_string), and expected output data (:columns - which should probably be renamed). :columns is the array of hashes that's expected to be returned by get_column_table_intersection. The query is also stored here for posterity's sake.
+
 ## Contributing
 
 1. Fork it ( http://github.com/<my-github-username>/treehugger/fork )
