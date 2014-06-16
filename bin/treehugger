@@ -18,7 +18,7 @@ class App
       raise ArgumentError, "You have entered an invalid version of #{language} to parse. Only Hive (cdh4) is supported at this time."
     end   
 
-    filenames = options['file'] || []
+    filenames = options['file'].split(",") || []
 
     files = if filenames.empty?
               [STDIN]
@@ -52,6 +52,7 @@ class App
   #
   on("-l language","--language","language to parse")
   on("-V version","--language-version","The version of language to parse")
+  on("-f file", "--file", "file containing AST to parse.")
   # Accept flags via:
   # on("--flag VAL","Some flag")
   # options[flag] will contain VAL
