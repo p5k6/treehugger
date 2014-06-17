@@ -6,6 +6,7 @@ module TreeHugger
       attr_reader :column_references, :table_references
 
       def initialize(ast_string)
+        #### TODO - allow a TreeHugger::Tree object to initialize
         @master_tree = TreeHugger::Hive::Planter.parse_tree(ast_string)
       end
 
