@@ -38,7 +38,6 @@ module TreeHugger
             end
             last_branch = last_branch.parent unless last_branch.parent.nil?
           else
-            puts y
             raise "could not parse the tree"
           end
 

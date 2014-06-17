@@ -11,11 +11,11 @@ class App
 
   main do
     unless ['hive'].include?(options['language'])
-      raise ArgumentError, "You have entered an invalid language to parse. Only Hive (cdh4) is supported at this time."
+      raise ArgumentError, "You have entered an invalid language to parse. Only Hive (cdh42) is supported at this time."
     end   
 
-    unless ['cdh4'].include?(options['version'])
-      raise ArgumentError, "You have entered an invalid version of #{language} to parse. Only Hive (cdh4) is supported at this time."
+    unless ['cdh42'].include?(options['version'])
+      raise ArgumentError, "You have entered an invalid version of #{language} to parse. Only Hive (cdh42) is supported at this time."
     end   
 
     filenames = options['file'].split(",") || []
@@ -44,7 +44,7 @@ class App
   # Declare command-line interface here
   #
   options['language'] = 'hive'
-  options['version'] = 'cdh4'
+  options['version'] = 'cdh42'
 
 
   # description "one line description of your app"

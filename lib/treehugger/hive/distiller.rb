@@ -11,7 +11,6 @@ module TreeHugger
       end
 
       def populate_columns_and_tables
-        ## put into initializer???
         @master_references = get_main_references
         @column_references = @master_references[:column_references]
         @table_references = @master_references[:table_references]
@@ -25,6 +24,8 @@ module TreeHugger
           } 
         }.flatten.compact
       end
+
+      private
 
       def get_main_references
         table_refs = []

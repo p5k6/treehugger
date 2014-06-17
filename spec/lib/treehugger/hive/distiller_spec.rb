@@ -23,6 +23,8 @@ describe TreeHugger::Hive::Distiller do
     context ".get_column_table_intersection" do
       #### todo - use the column_table intersection from the 
       #
+      #TODO - put sort and unique in get_column_table_intersection
+      #
       let!(:subject)  { TreeHugger::Hive::Distiller.new(test_case[:ast_string]) }
 
       it "grabs columns correctly" do
