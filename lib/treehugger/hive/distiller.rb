@@ -34,6 +34,8 @@ module TreeHugger
         query_uuid_stack = [] 
         temp_splat_storage = []
 
+
+        #### TODO - clean up these if statements into multiple functions, pass in a hash containing the temp variables (above)
         @master_tree.each { |node,depth| 
           if node.token == "TOK_QUERY"
             query_uuid_stack.push({ :uuid => SecureRandom.uuid, :depth => depth } )
