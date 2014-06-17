@@ -44,13 +44,12 @@ Binary included with the gem. Accepts input from either stdin or a file, which s
 For this test, I decided the best way to approach was to create a list of inputs and expected outputs in a separate file. The spec/support/hive_test_data.yml contains an array of hashes, this time with input data (:ast_string), and expected output data (:columns - which should probably be renamed). :columns is the array of hashes that's expected to be returned by get_column_table_intersection. The query is also stored here for posterity's sake.
 
 ## Current Limitations
-###### TODO - is this necessary?
-If you have a Hive query, which contains multiple subqueries (call the derived tables A and B), and you pull a column from (say) A, without namespacing (because the column you are pulling is unique to subquery A), and you used select * (splat) in subquery A, the parser will not return this column<->table intersection. 
+If you have a Hive query which selects a column without using an alias from multiple (joined) tables, the column will not be returned
 
 #### Example (where 'name' is unique to table b):
-    select a.id, name from (select * from cities) a join (select * from deals) b on a.id=b.id
+    select a.id, name from cities a join deals b on a.id=b.id
 
-Note however that you will still have a "ALL_COLUMNS" dependency returned, which should subsume the "name" 
+This is not something that would be easy to solve with the current implementation, as the TreeHugger gem does not have access to the underlying schemas. I'm considering allowing a schema to be passed into the distiller object, which could then be used to determine the owner of the non-alias'd column
 
 ## Contributing
 

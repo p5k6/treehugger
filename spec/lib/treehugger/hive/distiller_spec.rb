@@ -34,5 +34,11 @@ describe TreeHugger::Hive::Distiller do
         diff.should be_empty
       end
     end
+
+    after(:all) do
+      subject = nil
+      diff = nil
+      test_case = nil
+    end
   end
 end

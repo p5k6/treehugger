@@ -21,8 +21,8 @@ module TreeHugger
         @table_references.map { |a|
           @column_references.map { |b|
             {:column_name => b[:col_name], :table => a[:table], :db => a[:db] } if a[:alias] == b[:alias] && a[:query_uuid] == b[:query_uuid]
-          } 
-        }.flatten.compact
+          }
+        }.flatten.compact.sort_by { |x| [ x[:table],x[:col_name]] }.uniq
       end
 
       private
