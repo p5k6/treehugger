@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    treehugger (0.0.1)
+    treehugger (0.1.0)
       methadone (~> 1.4.0)
 
 GEM
