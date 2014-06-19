@@ -1,0 +1,43 @@
+---
+- :ast_string: (TOK_QUERY (TOK_FROM (TOK_JOIN (TOK_TABREF (TOK_TABNAME josh test_cities)
+    a) (TOK_TABREF (TOK_TABNAME cities) b))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR
+    TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR (. (TOK_TABLE_OR_COL a) id)) (TOK_SELEXPR
+    (. (TOK_TABLE_OR_COL b) id)))))
+  :columns:
+  - :column_name: id
+    :table: test_cities
+    :db: josh
+  - :column_name: id
+    :table: cities
+    :db: default
+  :raw_query: explain select josh.test_cities.id, cities.id from josh.test_cities
+    a join cities b limit 10
+  :enabled: true
+- :ast_string: (TOK_QUERY (TOK_FROM (TOK_JOIN (TOK_TABREF (TOK_TABNAME cities) a)
+    (TOK_SUBQUERY (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME deals))) (TOK_INSERT
+    (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR (TOK_TABLE_OR_COL
+    short_title)) (TOK_SELEXPR (TOK_TABLE_OR_COL id))))) b) (= (. (TOK_TABLE_OR_COL
+    a) id) (. (TOK_TABLE_OR_COL b) id)))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE))
+    (TOK_SELECT (TOK_SELEXPR (. (TOK_TABLE_OR_COL a) id)) (TOK_SELEXPR (TOK_TABLE_OR_COL
+    short_title)))))
+  :columns: &70283053435880
+  - :column_name: id
+    :table: cities
+    :db: default
+  - :column_name: short_title
+    :table: deals
+    :db: default
+  - :column_name: id
+    :table: deals
+    :db: default
+  :raw_query: explain select a.id, short_title from cities a join (select short_title,
+    id from deals) b on a.id=b.id
+  :enabled: true
+- :ast_string: (TOK_QUERY (TOK_FROM (TOK_JOIN (TOK_TABREF (TOK_TABNAME cities) a)
+    (TOK_TABREF (TOK_TABNAME deals) b) (= (. (TOK_TABLE_OR_COL a) id) (. (TOK_TABLE_OR_COL
+    b) id)))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR
+    (. (TOK_TABLE_OR_COL a) id)) (TOK_SELEXPR (TOK_TABLE_OR_COL short_title)))))
+  :columns: *70283053435880
+  :raw_query: --note this should fail!\nexplain select a.id, short_title from cities
+    a join  deals b on a.id=b.id
+  :enabled: false
